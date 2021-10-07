@@ -144,7 +144,7 @@ def prefix_check(client, message):
 
 
 client = commands.Bot(
-    command_prefix=prefix_check,
+    command_prefix=['s!', 'S!', '| ', '-'],
     intents=intents,
     case_insensitive=True,
 )
@@ -3547,6 +3547,8 @@ past_respose = []
 generated = []
 
 
+
+
 @client.event
 async def on_message(msg):
     auth = os.getenv("transformers_auth")
@@ -3578,9 +3580,9 @@ async def on_message(msg):
                             await msg.channel.send("thog dont caare")
                             break
 
-        if msg.content.lower().startswith("alfred"):
+        if msg.content.lower().startswith("starkov"):
 
-            input_text = msg.content.lower().replace("alfred", "")
+            input_text = msg.content.lower().replace("starkov", "")
             payload = {
                 "inputs": {
                     "past_user_inputs": past_respose,
@@ -3607,7 +3609,7 @@ async def on_message(msg):
         if f"<@!{client.user.id}>" in msg.content:
             prefi = prefix_dict.get(msg.guild.id, "'")
             embed = discord.Embed(
-                title="Hi!! I am Alfred.",
+                title="Hi!! I am starkov, russian brother of alfred",
                 description=f"""Prefix is {prefi}\nFor more help, type {prefi}help""",
                 color=discord.Color(value=re[8]),
             )
@@ -3631,7 +3633,12 @@ async def on_message(msg):
                 title="Error", description=str(e), color=discord.Color(value=re[8])
             )
         )
-
+        
+@client.command()
+async def ponged(ctx, times,time, *, content):
+  for i in range(int(times)):
+    await ctx.send(content)
+    await asyncio.sleep(int(time))
 
 @client.command()
 async def thog(ctx, *, text):
