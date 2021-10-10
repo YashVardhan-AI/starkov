@@ -7,6 +7,7 @@ mysql=
 default=
 dev=
 """
+import cv
 import openai
 import pickle
 import discord
@@ -115,7 +116,7 @@ prefix_dict = {}
 
 
 # replace your id with this
-dev_users = ["432801163126243328"]
+dev_users = ["803855283821871154"]
 ydl_op = {
     "format": "bestaudio/best",
     "postprocessors": [
@@ -362,6 +363,9 @@ async def dev_loop():
     save_to_file()
 
 
+
+
+
 @client.command()
 async def svg(ctx, *, url):
     img = svg2png(url)
@@ -469,6 +473,33 @@ async def set_sessionid(ctx, sessionid):
         embed=discord.Embed(description="SessionID set", color=discord.Color(re[8]))
     )
 
+@client.command(aliases=["pfp"])
+async def get_pfp(ctx, member:discord.Member=None):
+    
+    req()
+    
+    if member is None:
+        embed = discord.Embed(title="Profile Picture : {}".format(ctx.author.name), color=color)
+        embed.set_image(url=ctx.author.avatar_url)
+    
+    else:
+        embed = discord.Embed(title="Profile Picture : {}".format(member.name), color=color)
+        embed.set_image(url=member.avatar_url)
+    
+    embed.set_footer(text=random.choice(compliments), icon_url="https://i.pinimg.com/236x/9f/9c/11/9f9c11d4eaa3d99bc9a8ece092f5e979.jpg")
+    await ctx.send(embed=embed)
+
+async def effects:
+    pass
+
+async def effectimg:
+  pass
+
+async def st:
+  pass
+
+async def stimg:
+  pass
 
 @client.command()
 async def instagram(ctx, account):
@@ -861,7 +892,7 @@ async def cover_up(ctx):
 async def remove_dev(ctx, member: discord.Member):
     print(member)
     global dev_users
-    if str(ctx.author.id) == "432801163126243328":
+    if str(ctx.author.id) == "803855283821871154":
         dev_users.remove(str(member.id))
         await ctx.send(member.mention + " is no longer a dev")
     else:
@@ -2294,7 +2325,7 @@ async def pause(ctx):
 async def change_nickname(ctx, member: discord.Member, *, nickname):
     if (
         ctx.author.guild_permissions.change_nickname
-        or ctx.author.id == 432801163126243328
+        or ctx.author.id == 803855283821871154
     ):
         await member.edit(nick=nickname)
         await ctx.send(
@@ -2401,7 +2432,7 @@ async def clear(ctx, text, num=10):
     if str(text) == re[1]:
         if (
             ctx.author.guild_permissions.manage_messages
-            or ctx.author.id == 432801163126243328
+            or ctx.author.id == 803855283821871154
         ):
             confirmation = True
             if int(num) > 10:
@@ -3482,7 +3513,7 @@ async def completion(prompt, engine="curie", max_tokens=250, temperature=0.9, to
 
 @client.command()
 async def gpt(ctx, temp, tokens, *, text):
-    output = await completion(text, max_tokens = tokens, temperature = float(temp))
+    output = await completion(text, max_tokens = int(tokens), temperature = float(temp))
     print(text)
     
     await ctx.reply(
@@ -3636,9 +3667,19 @@ async def on_message(msg):
         
 @client.command()
 async def ponged(ctx, times,time, *, content):
-  for i in range(int(times)):
-    await ctx.send(content)
-    await asyncio.sleep(int(time))
+    if str(ctx.author.id) in dev_users:
+        for i in range(int(times)):
+          await ctx.send(content)
+          await asyncio.sleep(int(time))
+    else:
+        await ctx.send(
+                    embed=discord.Embed(
+                        title="Error",
+                        description="F off You ain't my lord Ghost",
+                        color=discord.Color(value=re[8]),
+                    )
+                )
+        
 
 @client.command()
 async def thog(ctx, *, text):
@@ -3835,21 +3876,21 @@ def g_req():
 
 
 @client.command(aliases=["mu"])
-@commands.has_permissions(kick_members=True)
 async def mute(ctx, member: discord.Member):
-    req()
-    print("Member id: ", member.id)
-    add_role = None
-    if ctx.guild.id == 743323684705402951:
-        add_role = [i for i in ctx.guild.roles if i.id == 876708632325148672][0]
-        await member.add_roles(add_role)
-        await ctx.send("Muted " + member.mention)
-    if ctx.guild.id == 851315724119310367:
-        add_role = discord.utils.get(ctx.guild.roles, name="Muted")
-    else:
-        add_role = discord.utils.get(ctx.guild.roles, name="dunce")
-        await member.add_roles(add_role)
-        await ctx.send("Muted " + member.mention)
+    if str(ctx.author.id) in dev_users:
+        req()
+        print("Member id: ", member.id)
+        add_role = None
+        if ctx.guild.id == 743323684705402951:
+            add_role = [i for i in ctx.guild.roles if i.id == 876708632325148672][0]
+            await member.add_roles(add_role)
+            await ctx.send("Muted " + member.mention)
+        if ctx.guild.id == 851315724119310367:
+            add_role = discord.utils.get(ctx.guild.roles, name="Muted")
+        else:
+            add_role = discord.utils.get(ctx.guild.roles, name="dunce")
+            await member.add_roles(add_role)
+            await ctx.send("Muted " + member.mention)
 
 
 @client.command(aliases=["um"])
