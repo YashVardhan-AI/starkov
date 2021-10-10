@@ -7,6 +7,7 @@ mysql=
 default=
 dev=
 """
+from _typeshed import NoneType
 import cv
 import openai
 import pickle
@@ -479,27 +480,45 @@ async def get_pfp(ctx, member:discord.Member=None):
     req()
     
     if member is None:
-        embed = discord.Embed(title="Profile Picture : {}".format(ctx.author.name), color=color)
+        embed = discord.Embed(title="Profile Picture : {}".format(ctx.author.name), color=re[8])
         embed.set_image(url=ctx.author.avatar_url)
     
     else:
-        embed = discord.Embed(title="Profile Picture : {}".format(member.name), color=color)
+        embed = discord.Embed(title="Profile Picture : {}".format(member.name), color=re[8])
         embed.set_image(url=member.avatar_url)
     
-    embed.set_footer(text=random.choice(compliments), icon_url="https://i.pinimg.com/236x/9f/9c/11/9f9c11d4eaa3d99bc9a8ece092f5e979.jpg")
     await ctx.send(embed=embed)
 
-async def effects:
+async def effects(ctx, effect, member):
+    if member == None:
+        url = ctx.author.avatar_url
+    else:
+        url = member.avatar_url
+            
+    if effect == None:
+        await ctx.send(
+                    embed=cembed(
+                        title="OOPS",
+                        description="Hmm You seem to be forgetting an argument \n s!effects <effect> <member> if member is none the users pfp will be modified \n The list of effects is ['cartoonify', 'watercolor', 'canny', 'pencil', 'econify', 'negative', 'faces', 'surprise']",
+                        color=discord.Color(value=re[8]),
+                    )
+                )
+    
+    elif effect == "cartoonify":
+        pass
+        
+        
+        
+
+    
+async def effectimg():
     pass
 
-async def effectimg:
-  pass
+async def st():
+    pass
 
-async def st:
-  pass
-
-async def stimg:
-  pass
+async def stimg():
+    pass
 
 @client.command()
 async def instagram(ctx, account):
