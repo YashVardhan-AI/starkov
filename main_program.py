@@ -7,7 +7,7 @@ mysql=
 default=
 dev=
 """
-from _typeshed import NoneType
+import cv2
 import cv
 import openai
 import pickle
@@ -489,12 +489,18 @@ async def get_pfp(ctx, member:discord.Member=None):
     
     await ctx.send(embed=embed)
 
-async def effects(ctx, effect, member):
+@client.command()
+async def effects(ctx, effect, member:discord.Member=None):
     if member == None:
         url = ctx.author.avatar_url
     else:
         url = member.avatar_url
-            
+              
+    a = str(url)
+	  req = requests.get(a).content
+    arr = np.asarray(bytearray(req), dtype=np.uint8)
+	  img = cv2.imdecode(arr, -1)
+
     if effect == None:
         await ctx.send(
                     embed=cembed(
@@ -504,11 +510,16 @@ async def effects(ctx, effect, member):
                     )
                 )
     
+    
     elif effect == "cartoonify":
-        pass
-        
-        
-        
+        img = cv2.resize(img, (500,500))
+        img = await cv.cartoonify(img)
+        cv2.imwrite('cartoon.jpg', img)
+        embed = discord.Embed(title="Profile Picture : {}".format(member.name),color=re[8])
+		    embed.set_image(url='attachment://green.jpg')
+
+        file = discord.File("green.jpg")
+        await ctx.send(file=file, embed=embed)
 
     
 async def effectimg():
