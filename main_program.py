@@ -569,7 +569,7 @@ async def effects(ctx, effect:str = None, member:discord.Member=None):
         cv2.imwrite('negative.jpg', img)
         embed = discord.Embed(title="Profile Picture ",color=re[8])
         embed.set_image(url='attachment://negative.jpg')
-        file = discord.File﻿("negative.jpg")
+        file = discord.File("negative.jpg")
         await ctx.send(file=file, embed=embed)
     
     elif effect == "pencil":
