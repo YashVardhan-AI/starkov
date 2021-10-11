@@ -25,22 +25,29 @@ async def cartoonify(frame):
     cartoon_image = cv.stylization(frame, sigma_s=150, sigma_r=0.25)
     frame = cartoon_image
     #frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
-    frame = cv.resize(frame, (640, 480))
+    
     return frame
 
 
 async def watercolor(frame):
     frame = cv.stylization(frame, sigma_s=60, sigma_r=0.6)
     #frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
-    frame = cv.resize(frame, (640, 480))
     return frame
 
 
 async def pencil(frame):
     pencil, color = cv.pencilSketch(frame, sigma_s=60, sigma_r=0.5, shade_factor=0.010)
     #frame = cv.cvtColor(pencil, cv.COLOR_BGR2RGB)
-    frame = cv.resize(frame, (640, 480)) 
-    return frame
+     
+    return color
+
+async def pen(frame):
+    gray_image=cv.cvtColor(frame,cv.COLOR_BGR2GRAY)
+    inverted=255-gray_image
+    blurred=cv.GaussianBlur(inverted,(21,21),0)
+    invertedblur=255-blurred
+    pencilsketch=cv.divide(gray_image,invertedblur,scale=256.0)
+    return pencilsketch
 
 async def econify(frame):
     canny = canny_img(frame)
@@ -52,13 +59,13 @@ async def econify(frame):
         
     frame = green
     #frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
-    frame = cv.resize(frame, (640, 480))
+    
     return frame
 
 async def negative(frame):
     frame = cv.bitwise_not(frame)
     #frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
-    frame = cv.resize(frame, (640, 480))
+    
     return frame
 
 

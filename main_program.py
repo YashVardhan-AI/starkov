@@ -506,7 +506,7 @@ async def effects(ctx, effect:str = None, member:discord.Member=None):
         await ctx.send(
                     embed=cembed(
                         title="OOPS",
-                        description="""Hmm You seem to be forgetting an argument \n s!effects <effect> <member> if member is none the users pfp will be modified \n The list of effects is \n- cartoonify \n- watercolor \n- canny \n- pencil \n- econify \n- negative  """,
+                        description="""Hmm You seem to be forgetting an argument \n s!effects <effect> <member> if member is none the users pfp will be modified \n The list of effects is \n- cartoonify \n- watercolor \n- canny \n- pencil \n- econify \n- negative \n -pen  """,
                         color=re[8],
                     )
                 )
@@ -542,7 +542,7 @@ async def effects(ctx, effect:str = None, member:discord.Member=None):
         file = discord.File("watercolor.jpg")
         await ctx.send(file=file, embed=embed)
     
-    elif effect == "pencil":
+    elif effect == "pen":
         img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
         img = cv2.resize(img, (500,500))
         img = await cv.pencil(img)
@@ -569,12 +569,21 @@ async def effects(ctx, effect:str = None, member:discord.Member=None):
         cv2.imwrite('negative.jpg', img)
         embed = discord.Embed(title="Profile Picture ",color=re[8])
         embed.set_image(url='attachment://negative.jpg')
-        file = discord.File("negative.jpg")
+        file = discord.File﻿("negative.jpg")
         await ctx.send(file=file, embed=embed)
-        
+    
+    elif effect == "pencil":
+        img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
+        img = cv2.resize(img, (500,500))
+        img = await cv.pen(img)
+        cv2.imwrite('pen.jpg', img)
+        embed = discord.Embed(title="Profile Picture ",color=re[8])
+        embed.set_image(url='attachment://pen.jpg')
+        file = discord.File("pen.jpg")
+        await ctx.send(file=file, embed=embed)
 
 
-async def st():
+async def st(ctx, effect:str = None, member:discord.Member=None):
     pass
 
 
