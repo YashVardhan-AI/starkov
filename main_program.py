@@ -583,9 +583,43 @@ async def effects(ctx, effect:str = None, member:discord.Member=None):
         await ctx.send(file=file, embed=embed)
 
 
-async def st(ctx, effect:str = None, member:discord.Member=None):
-    pass
+async def st(ctx, model:str = None, member:discord.Member=None):
+    
+    style_models_file = ['candy.t7', 'composition_vii.t7', 'feathers.t7', 'la_muse.t7', 'mosaic.t7', 'starry_night.t7', 'the_scream.t7', 'the_wave.t7', 'udnie.t7']
+    style_models_name = ['candy', 'composition', 'feathers', 'muse', 'mosaic', 'night', 'scream', 'wave', 'udnie']
+    model_path = 'models'
+    style_models_dict = {name: os.path.join(model_path, filee) for name, filee in zip(style_models_name, style_models_file)}
+    
+    if member == None:
+        url = ctx.author.avatar_url_as(format='jpg')
+    else:
+        url = member.avatar_url_as(format='jpg')
 
+    a = str(url)
+    req = requests.get(a).content
+    arr = np.asarray(bytearray(req), dtype=np.uint8)
+    img = cv2.imdecode(arr, -1)
+    
+    if model == None:
+        await ctx.send(
+                    embed=cembed(
+                        title="OOPS",
+                        description="""Hmm You seem to be forgetting an argument \n s!effects <model> <member> if member is none the users pfp will be modified \n The list of models is \n- candy \n- composition \n- feathers \n- muse \n- mosaic \n- night \n -scream \n -wave \n -wave  """,
+                        color=re[8],
+                    )
+                )
+    else:
+        if model not in style_models_name:
+            await ctx.send(
+                    embed=cembed(
+                        title="OOPS",
+                        description="""Model not available \n The list of models is \n- candy \n- composition \n- feathers \n- muse \n- mosaic \n- night \n -scream \n -wave \n -wave  """,
+                        color=re[8],
+                    )
+                )
+        else: 
+            path = style_models_dict[model]
+            print(path)
 
 @client.command()
 async def instagram(ctx, account):
