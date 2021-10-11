@@ -506,7 +506,7 @@ async def effects(ctx, effect:str = None, member:discord.Member=None):
         await ctx.send(
                     embed=cembed(
                         title="OOPS",
-                        description="""Hmm You seem to be forgetting an argument \n s!effects <effect> <member> if member is none the users pfp will be modified \n The list of effects is \n- cartoonify \n- watercolor \n- canny \n- pencil \n- econify \n- negative \n- faces \n- surprise""",
+                        description="""Hmm You seem to be forgetting an argument \n s!effects <effect> <member> if member is none the users pfp will be modified \n The list of effects is \n- cartoonify \n- watercolor \n- canny \n- pencil \n- econify \n- negative  """,
                         color=re[8],
                     )
                 )
@@ -530,6 +530,46 @@ async def effects(ctx, effect:str = None, member:discord.Member=None):
         embed = discord.Embed(title="Profile Picture ",color=re[8])
         embed.set_image(url='attachment://canny.jpg')
         file = discord.File("canny.jpg")
+        await ctx.send(file=file, embed=embed)
+    
+    elif effect == "watercolor":
+        img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
+        img = cv2.resize(img, (500,500))
+        img = await cv.watercolor(img)
+        cv2.imwrite('watercolor.jpg', img)
+        embed = discord.Embed(title="Profile Picture ",color=re[8])
+        embed.set_image(url='attachment://watercolor.jpg')
+        file = discord.File("watercolor.jpg")
+        await ctx.send(file=file, embed=embed)
+    
+    elif effect == "pencil":
+        img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
+        img = cv2.resize(img, (500,500))
+        img = await cv.pencil(img)
+        cv2.imwrite('pencil.jpg', img)
+        embed = discord.Embed(title="Profile Picture ",color=re[8])
+        embed.set_image(url='attachment://pencil.jpg')
+        file = discord.File("pencil.jpg")
+        await ctx.send(file=file, embed=embed)
+    
+    elif effect == "econify":
+        img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
+        img = cv2.resize(img, (500,500))
+        img = await cv.econify(img)
+        cv2.imwrite('econ.jpg', img)
+        embed = discord.Embed(title="Profile Picture ",color=re[8])
+        embed.set_image(url='attachment://econ.jpg')
+        file = discord.File("econ.jpg")
+        await ctx.send(file=file, embed=embed)
+    
+    elif effect == "negative":
+        img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
+        img = cv2.resize(img, (500,500))
+        img = await cv.negative(img)
+        cv2.imwrite('negative.jpg', img)
+        embed = discord.Embed(title="Profile Picture ",color=re[8])
+        embed.set_image(url='attachment://negative.jpg')
+        file = discord.File("negative.jpg")
         await ctx.send(file=file, embed=embed)
         
 
