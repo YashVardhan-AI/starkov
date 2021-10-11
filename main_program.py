@@ -582,7 +582,7 @@ async def effects(ctx, effect:str = None, member:discord.Member=None):
         file = discord.File("pen.jpg")
         await ctx.send(file=file, embed=embed)
 
-
+@client.command()
 async def st(ctx, model:str = None, member:discord.Member=None):
     
     style_models_file = ['candy.t7', 'composition_vii.t7', 'feathers.t7', 'la_muse.t7', 'mosaic.t7', 'starry_night.t7', 'the_scream.t7', 'the_wave.t7', 'udnie.t7']
@@ -619,7 +619,7 @@ async def st(ctx, model:str = None, member:discord.Member=None):
                 )
         else: 
             path = style_models_dict[model]
-            print(path)
+            
 
 @client.command()
 async def instagram(ctx, account):
