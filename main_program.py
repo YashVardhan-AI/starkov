@@ -495,11 +495,11 @@ async def effects(ctx, effect, member:discord.Member=None):
         url = ctx.author.avatar_url
     else:
         url = member.avatar_url
-              
+
     a = str(url)
-	  req = requests.get(a).content
+    req = requests.get(a).content
     arr = np.asarray(bytearray(req), dtype=np.uint8)
-	  img = cv2.imdecode(arr, -1)
+    img = cv2.imdecode(arr, -1)
 
     if effect == None:
         await ctx.send(
@@ -516,8 +516,7 @@ async def effects(ctx, effect, member:discord.Member=None):
         img = await cv.cartoonify(img)
         cv2.imwrite('cartoon.jpg', img)
         embed = discord.Embed(title="Profile Picture : {}".format(member.name),color=re[8])
-		    embed.set_image(url='attachment://green.jpg')
-
+        embed.set_image(url='attachment://green.jpg')
         file = discord.File("green.jpg")
         await ctx.send(file=file, embed=embed)
 
