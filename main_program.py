@@ -7,6 +7,7 @@ mysql=
 default=
 dev=
 """
+import numpy as np
 import cv2
 import cv
 import openai
@@ -490,11 +491,11 @@ async def get_pfp(ctx, member:discord.Member=None):
     await ctx.send(embed=embed)
 
 @client.command()
-async def effects(ctx, effect, member:discord.Member=None):
+async def effects(ctx, effect:str = None, member:discord.Member=None):
     if member == None:
-        url = ctx.author.avatar_url
+        url = ctx.author.avatar_url_as(format='jpg')
     else:
-        url = member.avatar_url
+        url = member.avatar_url_as(format='jpg')
 
     a = str(url)
     req = requests.get(a).content
@@ -505,30 +506,26 @@ async def effects(ctx, effect, member:discord.Member=None):
         await ctx.send(
                     embed=cembed(
                         title="OOPS",
-                        description="Hmm You seem to be forgetting an argument \n s!effects <effect> <member> if member is none the users pfp will be modified \n The list of effects is ['cartoonify', 'watercolor', 'canny', 'pencil', 'econify', 'negative', 'faces', 'surprise']",
-                        color=discord.Color(value=re[8]),
+                        description="""Hmm You seem to be forgetting an argument \n s!effects <effect> <member> if member is none the users pfp will be modified \n The list of effects is \n- cartoonify \n- watercolor \n- canny \n- pencil \n- econify \n- negative \n- faces \n- surprise""",
+                        color=re[8],
                     )
                 )
     
     
     elif effect == "cartoonify":
+        img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
         img = cv2.resize(img, (500,500))
         img = await cv.cartoonify(img)
         cv2.imwrite('cartoon.jpg', img)
-        embed = discord.Embed(title="Profile Picture : {}".format(member.name),color=re[8])
-        embed.set_image(url='attachment://green.jpg')
-        file = discord.File("green.jpg")
+        embed = discord.Embed(title="Profile Picture ",color=re[8])
+        embed.set_image(url='attachment://cartoon.jpg')
+        file = discord.File("cartoon.jpg")
         await ctx.send(file=file, embed=embed)
 
-    
-async def effectimg():
-    pass
 
 async def st():
     pass
 
-async def stimg():
-    pass
 
 @client.command()
 async def instagram(ctx, account):

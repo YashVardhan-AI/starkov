@@ -10,12 +10,12 @@ async def canny_img(img):
     Canny edge detection
     """
     img = cv.Canny(img, 75, 120)
-    img = cv.cvtColor(img, cv.COLOR_GRAY2BGR)
+    img = cv.cvtColor(img, cv.COLOR_GRAY2RGB)
     return img
 
 async def cartoonify(frame):
 
-    gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+    gray = cv.cvtColor(frame, cv.COLOR_RGB2GRAY)
     gray = cv.medianBlur(gray, 3)
     edges = cv.adaptiveThreshold(
         gray, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 9, 10)
@@ -24,21 +24,21 @@ async def cartoonify(frame):
     cartoon = cv.bitwise_and(color, color, mask=edges)
     cartoon_image = cv.stylization(frame, sigma_s=150, sigma_r=0.25)
     frame = cartoon_image
-    frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
+    #frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
     frame = cv.resize(frame, (640, 480))
     return frame
 
 
 async def watercolor(frame):
     frame = cv.stylization(frame, sigma_s=60, sigma_r=0.6)
-    frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
+    #frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
     frame = cv.resize(frame, (640, 480))
     return frame
 
 
 async def pencil(frame):
     pencil, color = cv.pencilSketch(frame, sigma_s=60, sigma_r=0.5, shade_factor=0.010)
-    frame = cv.cvtColor(pencil, cv.COLOR_BGR2RGB)
+    #frame = cv.cvtColor(pencil, cv.COLOR_BGR2RGB)
     frame = cv.resize(frame, (640, 480)) 
     return frame
 
@@ -51,13 +51,13 @@ async def econify(frame):
     green = cv.merge([blank,g,blank])
         
     frame = green
-    frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
+    #frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
     frame = cv.resize(frame, (640, 480))
     return frame
 
 async def negative(frame):
     frame = cv.bitwise_not(frame)
-    frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
+    #frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
     frame = cv.resize(frame, (640, 480))
     return frame
 
