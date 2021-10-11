@@ -521,6 +521,17 @@ async def effects(ctx, effect:str = None, member:discord.Member=None):
         embed.set_image(url='attachment://cartoon.jpg')
         file = discord.File("cartoon.jpg")
         await ctx.send(file=file, embed=embed)
+        
+    elif effect == "canny":
+        img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
+        img = cv2.resize(img, (500,500))
+        img = await cv.canny_img(img)
+        cv2.imwrite('canny.jpg', img)
+        embed = discord.Embed(title="Profile Picture ",color=re[8])
+        embed.set_image(url='attachment://canny.jpg')
+        file = discord.File("canny.jpg")
+        await ctx.send(file=file, embed=embed)
+        
 
 
 async def st():
