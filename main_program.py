@@ -613,13 +613,20 @@ async def st(ctx, model:str = None, member:discord.Member=None):
             await ctx.send(
                     embed=cembed(
                         title="OOPS",
-                        description="""Model not available \n The list of models is \n- candy \n- composition \n- feathers \n- muse \n- mosaic \n- night \n -scream \n -wave \n -wave  """,
+                        description="""Model not available \n The list of models is \n- candy \n- composition \n- feathers \n- muse \n- mosaic \n- night \n - scream \n - wave \n - wave  """,
                         color=re[8],
                     )
                 )
         else: 
             path = style_models_dict[model]
-            
+            img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
+            img = cv2.resize(img, (600,600))
+            output = await cv.style_transfer(img, path)
+            cv2.imwrite('transfer.jpg', img)
+            embed = discord.Embed(title="Profile Picture ",color=re[8])
+            embed.set_image(url='attachment://transfer.jpg')
+            file = discord.File("transfer.jpg")
+            await ctx.send(file=file, embed=embed)
 
 @client.command()
 async def instagram(ctx, account):
