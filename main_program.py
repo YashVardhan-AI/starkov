@@ -490,6 +490,15 @@ async def get_pfp(ctx, member:discord.Member=None):
     
     await ctx.send(embed=embed)
 
+async def getImgArray(url):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(str(url)) as resp:
+            if resp.status == 200:
+                arr = np.asarray(bytearray(await resp.read()), dtype=np.uint8)
+                img = cv2.imdecode(arr, -1)
+
+    return img
+
 @client.command()
 async def effects(ctx, effect:str = None, member:discord.Member=None):
     if member == None:
@@ -497,10 +506,7 @@ async def effects(ctx, effect:str = None, member:discord.Member=None):
     else:
         url = member.avatar_url_as(format='jpg')
 
-    a = str(url)
-    req = requests.get(a).content
-    arr = np.asarray(bytearray(req), dtype=np.uint8)
-    img = cv2.imdecode(arr, -1)
+    img = await getImgArray(url)
 
     if effect == None:
         await ctx.send(
@@ -595,10 +601,7 @@ async def st(ctx, model:str = None, member:discord.Member=None):
     else:
         url = member.avatar_url_as(format='jpg')
 
-    a = str(url)
-    req = requests.get(a).content
-    arr = np.asarray(bytearray(req), dtype=np.uint8)
-    img = cv2.imdecode(arr, -1)
+    img = await getImgArray(url)
     
     if model == None:
         await ctx.send(
@@ -622,7 +625,7 @@ async def st(ctx, model:str = None, member:discord.Member=None):
             img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
             img = cv2.resize(img, (600,600))
             output = await cv.style_transfer(img, path)
-            cv2.imwrite('transfer.jpg', img)
+            cv2.imwrite('transfer.jpg', output)
             embed = discord.Embed(title="Profile Picture ",color=re[8])
             embed.set_image(url='attachment://transfer.jpg')
             file = discord.File("transfer.jpg")

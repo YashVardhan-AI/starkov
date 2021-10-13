@@ -88,4 +88,5 @@ async def style_transfer(image, model_path):
     output = output.transpose(1, 2, 0)
     output = np.clip(output, 0.0, 1.0)
     output = imutils.resize(output, width=500)
+    output = output*255
     return output
