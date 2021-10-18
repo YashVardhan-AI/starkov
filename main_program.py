@@ -44,6 +44,8 @@ import cloudscraper
 import requests
 import aiohttp
 from io import BytesIO
+from PIL import Image
+
 
 location_of_file = os.getcwd()
 try:
@@ -499,6 +501,19 @@ async def getImgArray(url):
 
     return img
 
+async def preprocess(img):
+    img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    img = cv2.resize(img, (500,500))
+    return img
+
+async def bytify(img):
+    arr = BytesIO()
+    img = Image.fromarray(img.astype(np.uint8))
+    img.save(arr, format='jpeg')
+    arr.seek(0)
+    return arr 
+
 @client.command()
 async def effects(ctx, effect:str = None, member:discord.Member=None):
     if member == None:
@@ -507,7 +522,9 @@ async def effects(ctx, effect:str = None, member:discord.Member=None):
         url = member.avatar_url_as(format='jpg')
 
     img = await getImgArray(url)
-
+    img = await preprocess(img)
+    embed = discord.Embed(title="Profile Picture ",color=re[8])
+    
     if effect == None:
         await ctx.send(
                     embed=cembed(
@@ -519,74 +536,52 @@ async def effects(ctx, effect:str = None, member:discord.Member=None):
     
     
     elif effect == "cartoonify":
-        img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
-        img = cv2.resize(img, (500,500))
         img = await cv.cartoonify(img)
-        cv2.imwrite('cartoon.jpg', img)
-        embed = discord.Embed(title="Profile Picture ",color=re[8])
-        embed.set_image(url='attachment://cartoon.jpg')
-        file = discord.File("cartoon.jpg")
-        await ctx.send(file=file, embed=embed)
+        arr = await bytify(img)
+        file = discord.File(fp = arr, filename = "cartoon.jpg")
         
     elif effect == "canny":
-        img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
-        img = cv2.resize(img, (500,500))
         img = await cv.canny_img(img)
-        cv2.imwrite('canny.jpg', img)
-        embed = discord.Embed(title="Profile Picture ",color=re[8])
-        embed.set_image(url='attachment://canny.jpg')
-        file = discord.File("canny.jpg")
-        await ctx.send(file=file, embed=embed)
-    
+        arr = await bytify(img)
+        file = discord.File(fp = arr, filename = "canny.jpg")
+        
     elif effect == "watercolor":
-        img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
-        img = cv2.resize(img, (500,500))
         img = await cv.watercolor(img)
-        cv2.imwrite('watercolor.jpg', img)
-        embed = discord.Embed(title="Profile Picture ",color=re[8])
-        embed.set_image(url='attachment://watercolor.jpg')
-        file = discord.File("watercolor.jpg")
-        await ctx.send(file=file, embed=embed)
+        arr = await bytify(img)
+        file = discord.File(fp = arr, filename = "watercolor.jpg")
     
     elif effect == "pen":
-        img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
-        img = cv2.resize(img, (500,500))
         img = await cv.pencil(img)
-        cv2.imwrite('pencil.jpg', img)
-        embed = discord.Embed(title="Profile Picture ",color=re[8])
-        embed.set_image(url='attachment://pencil.jpg')
-        file = discord.File("pencil.jpg")
-        await ctx.send(file=file, embed=embed)
+        arr = await bytify(img)
+        file = discord.File(fp = arr, filename = "pencil.jpg")
     
     elif effect == "econify":
-        img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
-        img = cv2.resize(img, (500,500))
         img = await cv.econify(img)
-        cv2.imwrite('econ.jpg', img)
-        embed = discord.Embed(title="Profile Picture ",color=re[8])
-        embed.set_image(url='attachment://econ.jpg')
-        file = discord.File("econ.jpg")
-        await ctx.send(file=file, embed=embed)
+        arr = await bytify(img)
+        file = discord.File(fp = arr, filename = "econ.jpg")
     
     elif effect == "negative":
-        img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
-        img = cv2.resize(img, (500,500))
         img = await cv.negative(img)
-        cv2.imwrite('negative.jpg', img)
-        embed = discord.Embed(title="Profile Picture ",color=re[8])
-        embed.set_image(url='attachment://negative.jpg')
-        file = discord.File("negative.jpg")
-        await ctx.send(file=file, embed=embed)
+        arr = await bytify(img)
+        file = discord.File(fp = arr, filename = "negative.jpg")
     
     elif effect == "pencil":
-        img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
-        img = cv2.resize(img, (500,500))
         img = await cv.pen(img)
-        cv2.imwrite('pen.jpg', img)
-        embed = discord.Embed(title="Profile Picture ",color=re[8])
-        embed.set_image(url='attachment://pen.jpg')
-        file = discord.File("pen.jpg")
-        await ctx.send(file=file, embed=embed)
+        arr = await bytify(img)
+        file = discord.File(fp = arr, filename = "pen.jpg")
+
+    await ctx.send(file=file, embed=embed)
+
+async def stylet(img, path):
+    img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
+    img = cv2.resize(img, (600,600))
+    output = await cv.style_transfer(img, path)
+    arr = BytesIO()
+    img = Image.fromarray(output.astype(np.uint8))
+    img.save(arr, format='jpeg')
+    arr.seek(0)
+    return arr
+
 
 @client.command()
 async def st(ctx, model:str = None, member:discord.Member=None):
@@ -622,14 +617,13 @@ async def st(ctx, model:str = None, member:discord.Member=None):
                 )
         else: 
             path = style_models_dict[model]
-            img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
-            img = cv2.resize(img, (600,600))
-            output = await cv.style_transfer(img, path)
-            cv2.imwrite('transfer.jpg', output)
+            arr = await stylet(img, path)
+
             embed = discord.Embed(title="Profile Picture ",color=re[8])
-            embed.set_image(url='attachment://transfer.jpg')
-            file = discord.File("transfer.jpg")
+            file = discord.File(fp = arr, filename = "transfer.jpg")
             await ctx.send(file=file, embed=embed)
+
+
 
 @client.command()
 async def instagram(ctx, account):
